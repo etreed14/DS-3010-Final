@@ -1,0 +1,49 @@
+import pandas as pd
+import sklearn
+import pandas as pd
+import numpy as np
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.preprocessing import StandardScaler
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+fin = pd.read_csv('/Users/ethanreed/Downloads/DS3DataFiles/cs3fin.csv')
+
+caseIds = pd.read_csv('/Users/ethanreed/Downloads/DS3DataFiles/CaseIds.csv')
+collisions = pd.read_csv('/Users/ethanreed/Downloads/DS3DataFiles/Collisions.csv')
+parties = pd.read_csv('/Users/ethanreed/Downloads/DS3DataFiles/Parties.csv')
+victims = pd.read_csv('/Users/ethanreed/Downloads/DS3DataFiles/Victims.csv')
+
+victims = victims[victims.apply(lambda row: len(row) == 10, axis=1)]
+caseIds['db_year'] = pd.to_numeric(caseIds['db_year'], errors='coerce')
+fin = caseIds.merge(collisions, on='case_id').merge(parties, on='case_id').merge(victims, on='case_id')
+fin.to_csv('cs3fin.csv', index=False)
+
+fin['population'] = fin['population'].replace({'>250000': '300000'})
+fin = fin.replace({'unincorporated': np.nan})
+
+# Group DataFrame by 'vehicle_make' and sum 'hit_and_run' values
+grouped = fin.groupby('vehicle_make')['hit_and_run'].sum()
+
+# Get top 5 vehicle makes with highest hit-and-run counts
+top_makes = grouped.nlargest(5)
+
+# Calculate %e of total hit-and-runs for each top make
+total_hits = top_makes.sum()
+percentages = top_makes / total_hits * 100
+
+# Print results
+print(f'Top 5 Vehicle Makes by Hit-and-Run Count:\n{top_makes}\n')
+print(f'Percentage of Total Hit-and-Runs for Top 5 Makes:\n{percentages}')
+
+corr_matrix = fin.corr()
+print(corr_matrix)
+
+# sns.set(font_scale=1.2)
+# corr = fin.corr()
+# sns.heatmap(corr, annot=True, cmap='coolwarm', vmin=-1, vmax=1)
+# plt.show()
+
+plt.figure(figsize=(20, 20)) # Set the figure size to 20x20 inches
+sns.heatmap(fin, annot=True, cmap='coolwarm', fmt='.2f')
+plt.show()

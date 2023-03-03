@@ -1,0 +1,249 @@
+import csv
+
+# Open the CSV file
+with open('cs3fin.csv', 'r') as csvfile:
+    # Create a CSV reader object
+    csvreader = csv.reader(csvfile)
+
+    # Read the first row of the CSV file
+    first_row = next(csvreader)
+
+    # Print the first row of the CSV file
+    print(first_row)
+
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Load the CSV file using pandas
+data = pd.read_csv('cs3fin.csv')
+
+# Extract the column you want to plot as a series
+column_data = data['pcf_violation_category']
+
+# Get the counts for each unique value in the column
+value_counts = column_data.value_counts()
+
+# Create a pie chart
+fig, ax = plt.subplots()
+wedges, labels, autopct = ax.pie(value_counts.values, autopct='%1.1f%%', startangle=90)
+
+# Add a title to the chart
+ax.set_title('Pie Chart of Colission Data')
+
+# Add a custom legend to the chart
+legend_labels = [f'{label} ({value_counts[label]} - {autopct[i]})' for i, label in enumerate(value_counts.index)]
+ax.legend(wedges, legend_labels, title='Legend', loc='center left', bbox_to_anchor=(1, 0.5))
+
+# Display the chart
+plt.show()
+
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Load the CSV file using pandas
+data = pd.read_csv('cs3fin.csv')
+
+# Extract the column you want to plot as a series
+column_data = data['type_of_collision']
+
+# Get the counts for each unique value in the column
+value_counts = column_data.value_counts()
+
+# Create a pie chart
+fig, ax = plt.subplots()
+wedges, labels, autopct = ax.pie(value_counts.values, autopct='%1.1f%%', startangle=90)
+
+# Add a title to the chart
+ax.set_title('Pie Chart of Colission Type Data')
+
+# Add a custom legend to the chart
+legend_labels = [f'{label} ({value_counts[label]} - {autopct[i]})' for i, label in enumerate(value_counts.index)]
+ax.legend(wedges, legend_labels, title='Legend', loc='center left', bbox_to_anchor=(1, 0.5))
+
+# Display the chart
+plt.show()
+
+
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Load the CSV file using pandas
+data = pd.read_csv('cs3fin.csv')
+
+# Extract the column you want to plot as a series
+column_data = data['location_type']
+
+# Get the counts for each unique value in the column
+value_counts = column_data.value_counts()
+
+# Create a pie chart
+fig, ax = plt.subplots()
+wedges, labels, autopct = ax.pie(value_counts.values, autopct='%1.1f%%', startangle=90)
+
+# Add a title to the chart
+ax.set_title('Pie Chart of Location Type Data')
+
+# Add a custom legend to the chart
+legend_labels = [f'{label} ({value_counts[label]} - {autopct[i]})' for i, label in enumerate(value_counts.index)]
+ax.legend(wedges, legend_labels, title='Legend', loc='center left', bbox_to_anchor=(1, 0.5))
+
+# Display the chart
+plt.show()
+
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Load the CSV file using pandas
+data = pd.read_csv('cs3fin.csv')
+
+# Extract the column you want to plot as a series
+column_data = data['party_number_x']
+
+# Get the counts for each unique value in the column
+value_counts = column_data.value_counts().nlargest(10)
+
+# Create a pie chart
+fig, ax = plt.subplots()
+wedges, labels, autopct = ax.pie(value_counts.values, autopct='%1.1f%%', startangle=90)
+
+# Add a title to the chart
+ax.set_title('Pie Chart of Top 10 Party Number Data')
+
+# Add a custom legend to the chart
+legend_labels = [f'{label} ({value_counts[label]} - {autopct[i]})' for i, label in enumerate(value_counts.index)]
+ax.legend(wedges, legend_labels, title='Legend', loc='center left', bbox_to_anchor=(1, 0.5))
+
+# Display the chart
+plt.show()
+
+
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Load the CSV file using pandas
+data = pd.read_csv('cs3fin.csv')
+
+# Filter the data to only include hit and runs that were felonies or misdemeanors
+data = data[(data['hit_and_run'] != 'Not Hit and Run') & (data['hit_and_run'] != 'Hit and Run - Felony w/ Injury')]
+
+# Group the data by vehicle make and count the occurrences
+grouped_data = data.groupby(['vehicle_make']).size()
+
+# Sort the data by frequency and take the top 10
+top_n = 10
+grouped_data = grouped_data.sort_values(ascending=False)[:top_n]
+
+# Create a pie chart
+fig, ax = plt.subplots()
+wedges, labels, autopct = ax.pie(grouped_data.values, autopct='%1.1f%%', startangle=90)
+
+# Add a title to the chart
+ax.set_title(f'Pie Chart of Top {top_n} Makes with the most Hit and Runs')
+
+# Add a custom legend to the chart
+legend_labels = [f'{label} ({grouped_data[label]} - {autopct[i]})' for i, label in enumerate(grouped_data.index)]
+ax.legend(wedges, legend_labels, title='Legend', loc='center left', bbox_to_anchor=(1, 0.5))
+
+# Display the chart
+plt.show()
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Load the CSV file using pandas
+data = pd.read_csv('cs3fin.csv')
+
+# Group the data by vehicle make and count the occurrences
+grouped_data = data.groupby(['vehicle_make']).size()
+
+# Filter the data to only include rows where at least one victim was killed
+data = data[data['killed_victims'] > 0]
+
+# Group the filtered data by vehicle make and count the occurrences
+grouped_data_filtered = data.groupby(['vehicle_make']).size()
+
+# Sort the data by frequency and take the top 10
+top_n = 10
+grouped_data_filtered = grouped_data_filtered.sort_values(ascending=False)[:top_n]
+
+# Create a pie chart
+fig, ax = plt.subplots()
+wedges, labels, autopct = ax.pie(grouped_data_filtered.values, autopct='%1.1f%%', startangle=90)
+
+# Add a title to the chart
+ax.set_title(f'Pie Chart of Top {top_n} Makes with the most Killed Victims')
+
+# Add a custom legend to the chart
+legend_labels = [f'{label} ({grouped_data_filtered[label]} - {autopct[i]})' for i, label in enumerate(grouped_data_filtered.index)]
+ax.legend(wedges, legend_labels, title='Legend', loc='center left', bbox_to_anchor=(1, 0.5))
+
+# Display the chart
+plt.show()
+
+
+
+import pandas as pd
+
+# Define a dictionary that maps each severity level to a numerical value
+severity_dict = {
+    'property damage only': 1,
+    'pain': 2,
+    'other injury': 3,
+    'severe injury': 4,
+    'fatal': 5
+}
+
+# Load the data into a Pandas DataFrame
+df = pd.read_csv('cs3fin.csv')
+
+# Map the string values in the collision_severity column to numerical values using the dictionary
+df['collision_severity'] = df['collision_severity'].map(severity_dict)
+
+# Filter out rows where collision_severity is not numeric
+df = df[pd.to_numeric(df['collision_severity'], errors='coerce').notnull()]
+
+# Group the data by vehicle make, year, driver age, and motor vehicle involved with
+groups = df.groupby(['vehicle_make', 'vehicle_year', 'party_age', 'motor_vehicle_involved_with'])
+
+# Calculate the average collision severity for each group
+averages = groups['collision_severity'].mean()
+
+# Sort the groups by descending order of severity
+sorted_groups = averages.sort_values(ascending=False)
+
+# Print the top 10 groups at risk the most
+print(sorted_groups.head(10))
+
+
+
+
+import csv
+from collections import Counter
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Load the CSV file using pandas
+data = pd.read_csv('cs3fin.csv')
+
+# Extract the column you want to plot as a series
+column_data = data['collision_severity']
+
+# Get the counts for each unique value in the column
+value_counts = column_data.value_counts()
+
+# Create a histogram of the data using Matplotlib
+plt.hist(column_data, bins=len(value_counts))
+plt.xlabel('Collision Severity')
+plt.ylabel('Count')
+plt.title('Histogram of Collision Severity')
+plt.show()
+
+
+
+
+
